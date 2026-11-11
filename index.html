@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101114">
+  <meta name="description" content="STUDY FLOW — a focused study and smart revision tracker.">
+  <title>STUDY FLOW</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="data.js" defer></script>
+  <script src="storage.js" defer></script>
+  <script src="revision.js" defer></script>
+  <script src="analytics.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Study Flow home">
+        <span class="brand-mark">S</span>
+        <span class="brand-copy">
+          <strong>STUDY FLOW</strong>
+          <small>LEARN · REMEMBER · GROW</small>
+        </span>
+      </a>
+
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="dashboard">
+          <span class="nav-icon">◫</span><span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="study">
+          <span class="nav-icon">▤</span><span>Study Flow</span>
+        </button>
+        <button class="nav-item" data-view="chapters">
+          <span class="nav-icon">▧</span><span>Chapter Manager</span>
+        </button>
+        <button class="nav-item" data-view="revisions">
+          <span class="nav-icon">↻</span><span>Revision Queue</span>
+          <span class="nav-count" id="revision-nav-count">0</span>
+        </button>
+        <button class="nav-item" data-view="analytics">
+          <span class="nav-icon">▥</span><span>Analytics</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <span class="note-orb"></span>
+          <div>
+            <strong>One chapter at a time.</strong>
+            <p>Consistency beats confusion.</p>
+          </div>
+        </div>
+        <button class="nav-item" data-view="settings">
+          <span class="nav-icon">⚙</span><span>Settings & Backup</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menu-toggle" aria-label="Toggle menu">☰</button>
+        <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-separator">/</span><strong id="page-name">Dashboard</strong></div>
+        <div class="topbar-right">
+          <span class="today-label" id="today-label">Today</span>
+          <div class="avatar">SF</div>
+        </div>
+      </header>
+
+      <section class="page active" id="page-dashboard" aria-labelledby="dashboard-title">
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow">YOUR PERSONAL LEARNING SPACE</p>
+            <h1 id="dashboard-title">Make today <span>count.</span></h1>
+            <p class="page-subtitle">A clear plan for new learning and the knowledge worth revisiting.</p>
+          </div>
+          <button class="primary-button" data-action="continue-study">＋ Continue studying</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-top"><span>Chapters completed</span><span class="stat-symbol">▤</span></div>
+            <strong class="stat-value" id="stat-completed">0</strong>
+            <span class="stat-foot">Across all subjects</span>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Revisions due</span><span class="stat-symbol">↻</span></div>
+            <strong class="stat-value" id="stat-due">0</strong>
+            <span class="stat-foot">Ready for active recall</span>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>In progress</span><span class="stat-symbol">◷</span></div>
+            <strong class="stat-value" id="stat-progress">0</strong>
+            <span class="stat-foot">Chapters currently underway</span>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Overall completion</span><span class="stat-symbol">◉</span></div>
+            <strong class="stat-value" id="stat-completion">0%</strong>
+            <span class="stat-foot">Your syllabus progress</span>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="panel today-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">YOUR NEXT ACTIONS</p><h2>Today's focus</h2></div>
+              <span class="soft-pill" id="today-task-count">0 tasks</span>
+            </div>
+            <div id="today-focus-list" class="task-list">
+              <div class="empty-state"><span>✦</span><strong>Your study space is ready.</strong><p>Add subjects and chapters to begin.</p></div>
+            </div>
+          </section>
+
+          <section class="panel flow-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">KEEP MOVING FORWARD</p><h2>Study sequence</h2></div>
+              <button class="text-button" data-view="study">View all →</button>
+            </div>
+            <div id="dashboard-study-flow" class="flow-preview">
+              <div class="empty-state compact"><span>▤</span><strong>No chapters yet</strong><p>Your next chapter will appear here.</p></div>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel retention-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">BUILD LONG-TERM MEMORY</p><h2>Retention overview</h2></div>
+            <span class="muted-label">Based on your confidence ratings</span>
+          </div>
+          <div id="retention-overview" class="retention-overview">
+            <div class="retention-empty">Complete a chapter and rate your recall to see your retention overview.</div>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-study" aria-labelledby="study-title">
+        <div class="page-heading-row">
+          <div><p class="eyebrow">FOLLOW YOUR SUBJECT ORDER</p><h1 id="study-title">Study Flow</h1><p class="page-subtitle">Move through chapters in a sequence that makes sense to you.</p></div>
+          <button class="primary-button" data-action="add-subject">＋ Add subject</button>
+        </div>
+        <div id="study-flow-list" class="subject-flow-list"></div>
+      </section>
+
+      <section class="page" id="page-chapters" aria-labelledby="chapters-title">
+        <div class="page-heading-row">
+          <div><p class="eyebrow">YOUR SYLLABUS, ORGANIZED</p><h1 id="chapters-title">Chapter Manager</h1><p class="page-subtitle">Add chapters, update progress, and record what you have learned.</p></div>
+          <button class="primary-button" data-action="add-chapter">＋ Add chapter</button>
+        </div>
+        <div class="toolbar">
+          <label class="search-box"><span>⌕</span><input id="chapter-search" type="search" placeholder="Search subjects or chapters"></label>
+          <select id="chapter-filter" aria-label="Filter chapters">
+            <option value="all">All chapters</option><option value="not-started">Not started</option><option value="in-progress">In progress</option><option value="completed">Completed</option>
+          </select>
+        </div>
+        <div id="chapter-list" class="chapter-list"></div>
+      </section>
+
+      <section class="page" id="page-revisions" aria-labelledby="revisions-title">
+        <div class="page-heading-row">
+          <div><p class="eyebrow">RECALL BEFORE YOU FORGET</p><h1 id="revisions-title">Revision Queue</h1><p class="page-subtitle">Review chapters when your confidence and schedule say they need attention.</p></div>
+          <span class="large-count" id="revision-total">0 <small>due</small></span>
+        </div>
+        <div class="revision-tabs" role="tablist" aria-label="Revision filter">
+          <button class="revision-tab active" data-revision-filter="due">Due now</button>
+          <button class="revision-tab" data-revision-filter="upcoming">Upcoming</button>
+          <button class="revision-tab" data-revision-filter="all">All scheduled</button>
+        </div>
+        <div id="revision-list" class="revision-list"></div>
+      </section>
+
+      <section class="page" id="page-analytics" aria-labelledby="analytics-title">
+        <div class="page-heading-row">
+          <div><p class="eyebrow">SEE YOUR PROGRESS CLEARLY</p><h1 id="analytics-title">Analytics</h1><p class="page-subtitle">Measure completed learning and how well you can recall it.</p></div>
+        </div>
+        <div id="analytics-content" class="analytics-content"></div>
+      </section>
+
+      <section class="page" id="page-settings" aria-labelledby="settings-title">
+        <div class="page-heading-row">
+          <div><p class="eyebrow">YOUR DATA, YOUR CONTROL</p><h1 id="settings-title">Settings & Backup</h1><p class="page-subtitle">Manage your study data and keep a safe copy.</p></div>
+        </div>
+        <div class="settings-grid">
+          <section class="panel settings-card"><h2>Data backup</h2><p>Export your subjects, chapters, progress, and revision history to a JSON file.</p><button class="secondary-button" data-action="export-data">↓ Export backup</button></section>
+          <section class="panel settings-card"><h2>Restore backup</h2><p>Restore a previously exported STUDY FLOW backup.</p><label class="secondary-button file-button">↑ Choose backup file<input type="file" id="import-file" accept="application/json"></label></section>
+          <section class="panel settings-card danger-zone"><h2>Reset study data</h2><p>Clear locally saved study data. Export a backup first if you may need it later.</p><button class="danger-button" data-action="reset-data">Reset all data</button></section>
+        </div>
+      </section>
+
+      <footer class="app-footer"><span>STUDY FLOW</span><span>Learn with clarity. Remember with purpose.</span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-heading"><div><p class="eyebrow">STUDY FLOW</p><h2 id="modal-title">Add details</h2></div><button class="icon-button" id="modal-close" aria-label="Close dialog">×</button></div>
+      <div id="modal-content"></div>
+    </section>
+  </div>
+
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>
