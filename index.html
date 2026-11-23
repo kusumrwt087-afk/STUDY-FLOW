@@ -12,12 +12,12 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-4 sm:p-8">
 
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <header class="flex flex-col sm:flex-row justify-between items-center mb-8 border-b border-slate-800 pb-4">
             <div>
                 <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-emerald-400">⚡ Ayanokoji Ultimate Tracker</h1>
-                <p class="text-sm text-slate-400 mt-1">Multi-Option Flexibility for Maximum Study Efficiency</p>
+                <p class="text-sm text-slate-400 mt-1">Dynamic Revision, Reset Mastery & Absolute Flexibility</p>
             </div>
             <div class="flex gap-3 mt-4 sm:mt-0">
                 <button onclick="exportData()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer border border-slate-700">📥 Export Backup</button>
@@ -29,10 +29,11 @@
 
         <!-- Due Today Alert Box -->
         <div id="dueAlertSection" class="bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-5 mb-8 hidden">
-            <h2 class="text-md font-semibold text-emerald-400 mb-2 flex items-center gap-2">
-                🔥 Due For Revision Today (<span id="dueDateString"></span>)
+            <h2 class="text-md font-semibold text-emerald-400 mb-3 flex items-center justify-between">
+                <span>🔥 Due For Revision Today (<span id="dueDateString"></span>)</span>
+                <span class="text-xs bg-emerald-500 text-slate-950 font-bold px-2 py-0.5 rounded" id="dueCountBadge">0 Due</span>
             </h2>
-            <div id="dueListContainer" class="space-y-2">
+            <div id="dueListContainer" class="space-y-3">
                 <!-- Due items will populate here dynamically -->
             </div>
         </div>
@@ -43,7 +44,7 @@
             <form id="taskForm" onsubmit="addTask(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="sm:col-span-2">
                     <label class="block text-xs font-medium text-slate-400 mb-1">Chapter / Topic Name</label>
-                    <input type="text" id="topicName" required placeholder="e.g., Trigonometry Ex 8.4 or Physics Kinematics" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500 transition">
+                    <input type="text" id="topicName" required placeholder="e.g., Science Ch 4 or Maths Trigonometry" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500 transition">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1">Study Date</label>
@@ -94,8 +95,31 @@
         </div>
     </div>
 
+    <!-- Mastery Reset Modal -->
+    <div id="resetModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+            <h3 class="text-lg font-semibold text-emerald-400 mb-2">🔄 Update / Reset Mastery Level</h3>
+            <p class="text-xs text-slate-400 mb-4">Revision complete kiya, par lag raha hai ki level change hona chahiye? Naya level select karo, dates apne aap recalculate ho jayengi!</p>
+            <input type="hidden" id="modalTaskId">
+            <div class="mb-4">
+                <select id="modalNewLevel" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500 transition cursor-pointer text-sm">
+                    <option value="level1">🔥 Ultra Hard (+1D, +2D, +3D, +5D)</option>
+                    <option value="level2">🔴 Weak / Forgot (+1D, +3D, +7D, +14D)</option>
+                    <option value="level3">🟡 Moderate (+1D, +3D, +7D, +21D)</option>
+                    <option value="level4">🟢 Good (+2D, +6D, +15D, +30D)</option>
+                    <option value="level5">⭐ Very Strong (+3D, +10D, +25D, +50D)</option>
+                    <option value="level6">🚀 Mastered (+7D, +20D, +45D, +90D)</option>
+                </select>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeResetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-semibold transition cursor-pointer">Cancel</button>
+                <button onclick="applyMasteryReset()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-4 py-2 rounded-lg text-xs font-semibold transition cursor-pointer">Update & Recalculate</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let tasks = JSON.parse(localStorage.getItem('ayanokoji_ultimate_tasks')) || [];
+        let tasks = JSON.parse(localStorage.getItem('ayanokoji_ultimate_v2_tasks')) || [];
 
         // Set default date to today
         document.getElementById('studyDate').valueAsDate = new Date();
@@ -116,8 +140,20 @@
             return new Date().toISOString().split('T')[0];
         }
 
+        function getIntervals(level) {
+            switch(level) {
+                case 'level1': return { intervals: [1, 2, 3, 5], label: "Ultra Hard" };
+                case 'level2': return { intervals: [1, 3, 7, 14], label: "Weak" };
+                case 'level3': return { intervals: [1, 3, 7, 21], label: "Moderate" };
+                case 'level4': return { intervals: [2, 6, 15, 30], label: "Good" };
+                case 'level5': return { intervals: [3, 10, 25, 50], label: "Very Strong" };
+                case 'level6': return { intervals: [7, 20, 45, 90], label: "Mastered" };
+                default: return { intervals: [1, 3, 7, 21], label: "Moderate" };
+            }
+        }
+
         function saveAndRender() {
-            localStorage.setItem('ayanokoji_ultimate_tasks', JSON.stringify(tasks));
+            localStorage.setItem('ayanokoji_ultimate_v2_tasks', JSON.stringify(tasks));
             renderTasks();
         }
 
@@ -127,36 +163,14 @@
             const date = document.getElementById('studyDate').value;
             const level = document.getElementById('understandingLevel').value;
 
-            // Define intervals based on selected level
-            let intervals = [1, 3, 7, 21]; // default level3
-            let levelLabel = "Moderate";
-
-            if (level === 'level1') {
-                intervals = [1, 2, 3, 5];
-                levelLabel = "Ultra Hard";
-            } else if (level === 'level2') {
-                intervals = [1, 3, 7, 14];
-                levelLabel = "Weak";
-            } else if (level === 'level3') {
-                intervals = [1, 3, 7, 21];
-                levelLabel = "Moderate";
-            } else if (level === 'level4') {
-                intervals = [2, 6, 15, 30];
-                levelLabel = "Good";
-            } else if (level === 'level5') {
-                intervals = [3, 10, 25, 50];
-                levelLabel = "Very Strong";
-            } else if (level === 'level6') {
-                intervals = [7, 20, 45, 90];
-                levelLabel = "Mastered";
-            }
+            const { intervals, label } = getIntervals(level);
 
             const newTask = {
                 id: Date.now(),
                 name: name,
                 date: date,
                 levelKey: level,
-                levelLabel: levelLabel,
+                levelLabel: label,
                 rev1Date: addDays(date, intervals[0]),
                 rev2Date: addDays(date, intervals[1]),
                 rev3Date: addDays(date, intervals[2]),
@@ -178,8 +192,46 @@
             const task = tasks.find(t => t.id === id);
             if (task) {
                 task[revField] = !task[revField];
-                saveAndRender();
+                // If checked, open reset modal so user can adjust mastery if needed
+                if (task[revField]) {
+                    openResetModal(id);
+                } else {
+                    saveAndRender();
+                }
             }
+        }
+
+        function openResetModal(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                document.getElementById('modalTaskId').value = id;
+                document.getElementById('modalNewLevel').value = task.levelKey;
+                document.getElementById('resetModal').classList.remove('hidden');
+            }
+        }
+
+        function closeResetModal() {
+            document.getElementById('resetModal').classList.add('hidden');
+            saveAndRender();
+        }
+
+        function applyMasteryReset() {
+            const id = parseInt(document.getElementById('modalTaskId').value);
+            const newLevel = document.getElementById('modalNewLevel').value;
+            const task = tasks.find(t => t.id === id);
+            
+            if (task) {
+                const { intervals, label } = getIntervals(newLevel);
+                task.levelKey = newLevel;
+                task.levelLabel = label;
+                // Recalculate future dates from base study date
+                task.rev1Date = addDays(task.date, intervals[0]);
+                task.rev2Date = addDays(task.date, intervals[1]);
+                task.rev3Date = addDays(task.date, intervals[2]);
+                task.rev4Date = addDays(task.date, intervals[3]);
+            }
+            document.getElementById('resetModal').classList.add('hidden');
+            saveAndRender();
         }
 
         function deleteTask(id) {
@@ -211,9 +263,15 @@
 
                 if (isDueToday) {
                     dueCount++;
-                    dueItemsHTML += `<div class="bg-slate-900/80 border border-emerald-500/20 px-4 py-2 rounded-lg flex justify-between items-center text-sm">
-                        <span class="font-medium text-slate-200">📌 ${t.name}</span>
-                        <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Needs Revision Today!</span>
+                    dueItemsHTML += `<div class="bg-slate-900/90 border border-emerald-500/30 px-4 py-3 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="font-semibold text-slate-100">📌 ${t.name}</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded uppercase font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${t.levelLabel}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-emerald-400 font-medium">Needs Revision Today!</span>
+                            <button onclick="openResetModal(${t.id})" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded border border-slate-700 cursor-pointer">Update Level ⚙️</button>
+                        </div>
                     </div>`;
                 }
 
@@ -228,7 +286,7 @@
                             ${isDueToday ? '<span class="ml-2 text-[10px] bg-emerald-500 text-slate-950 font-bold px-1.5 py-0.5 rounded">DUE</span>' : ''}
                         </td>
                         <td class="p-4">
-                            <span class="text-xs px-2 py-1 rounded border ${badgeColor} font-semibold whitespace-nowrap">${t.levelLabel}</span>
+                            <span class="text-xs px-2 py-1 rounded border ${badgeColor} font-semibold whitespace-nowrap cursor-pointer hover:opacity-80" onclick="openResetModal(${t.id})" title="Click to change mastery level">${t.levelLabel} ✏️</span>
                         </td>
                         <td class="p-4 text-slate-400 text-xs">${formatDate(t.date)}</td>
                         <td class="p-4 text-center">
@@ -255,6 +313,7 @@
             }).join('');
 
             const alertSection = document.getElementById('dueAlertSection');
+            document.getElementById('dueCountBadge').innerText = `${dueCount} Due`;
             if (dueCount > 0) {
                 document.getElementById('dueListContainer').innerHTML = dueItemsHTML;
                 alertSection.classList.remove('hidden');
@@ -267,7 +326,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "ultimate_study_backup_" + new Date().toISOString().slice(0,10) + ".json");
+            downloadAnchor.setAttribute("download", "ultimate_v2_study_backup_" + new Date().toISOString().slice(0,10) + ".json");
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
