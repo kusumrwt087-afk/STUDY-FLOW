@@ -1,696 +1,174 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#10131c">
-<title>STUDY FLOW</title>
-
-<style>
-:root {
-  --bg:#10131c;
-  --panel:#191e2b;
-  --panel2:#202738;
-  --text:#f1f3fa;
-  --muted:#929bad;
-  --accent:#8b9cff;
-  --green:#64d9a0;
-  --orange:#ffbd69;
-  --red:#ff7777;
-  --border:#30394c;
-}
-* {box-sizing:border-box}
-body {
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,sans-serif;
-  padding:20px 14px 45px;
-}
-.container {max-width:850px;margin:auto}
-header {padding:20px 4px 24px}
-.logo {
-  color:var(--accent);
-  font-size:12px;
-  letter-spacing:4px;
-  font-weight:bold;
-}
-h1 {font-size:30px;margin:10px 0 5px}
-.subtitle {color:var(--muted);font-size:14px}
-.panel {
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:16px;
-}
-h2 {font-size:17px;margin:0 0 16px}
-label {
-  display:block;
-  font-size:12px;
-  color:var(--muted);
-  margin:12px 0 7px;
-}
-input,select {
-  width:100%;
-  padding:13px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:var(--panel2);
-  color:var(--text);
-  outline:none;
-  font-size:14px;
-}
-input:focus,select:focus {border-color:var(--accent)}
-.grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-button {
-  border:0;
-  border-radius:10px;
-  padding:13px 16px;
-  background:var(--accent);
-  color:#111522;
-  font-weight:bold;
-  cursor:pointer;
-  font-size:13px;
-}
-button:active {transform:scale(.98)}
-.primary {width:100%;margin-top:17px}
-.secondary {
-  background:var(--panel2);
-  border:1px solid var(--border);
-  color:var(--text);
-}
-.danger {
-  background:#48272e;
-  color:#ffaaaa;
-}
-.stats {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-bottom:16px;
-}
-.stat {
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:14px 10px;
-}
-.stat strong {display:block;font-size:23px}
-.stat span {font-size:11px;color:var(--muted)}
-.chapter {
-  background:var(--panel2);
-  border:1px solid var(--border);
-  padding:14px;
-  border-radius:12px;
-  margin-top:10px;
-}
-.chapter-top {
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start;
-}
-.chapter h3 {font-size:15px;margin:0 0 6px}
-.meta {font-size:12px;color:var(--muted);line-height:1.7}
-.tag {
-  font-size:10px;
-  padding:5px 8px;
-  border-radius:20px;
-  background:#303c59;
-  color:#c5ceff;
-  white-space:nowrap;
-}
-.chapter-actions {
-  display:flex;
-  gap:8px;
-  margin-top:12px;
-  flex-wrap:wrap;
-}
-.chapter-actions button {padding:9px 12px}
-.rating-select {margin-top:12px}
-.empty {
-  text-align:center;
-  padding:25px 10px;
-  color:var(--muted);
-  font-size:13px;
-}
-#todaySection {display:none}
-#toast {
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translate(-50%,20px);
-  opacity:0;
-  background:#293348;
-  border:1px solid var(--border);
-  padding:12px 18px;
-  border-radius:10px;
-  font-size:13px;
-  transition:.2s;
-  pointer-events:none;
-  z-index:10;
-}
-#toast.show {opacity:1;transform:translate(-50%,0)}
-footer {
-  text-align:center;
-  color:var(--muted);
-  font-size:11px;
-  padding:15px;
-}
-@media(max-width:480px) {
-  body {padding:12px 10px 35px}
-  h1 {font-size:26px}
-  .panel {padding:15px}
-  .grid {gap:9px}
-  .stats {gap:7px}
-  .stat strong {font-size:20px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayanokoji Study & Spaced Repetition Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body>
-<div class="container">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 sm:p-8">
 
-<header>
-  <div class="logo">PERSONAL LEARNING SYSTEM</div>
-  <h1>STUDY FLOW</h1>
-  <div class="subtitle">Learn. Rate. Revise. Remember.</div>
-</header>
-<main>
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-8 border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-emerald-400">⚡ Target 0.5% & Merit Tracker</h1>
+                <p class="text-sm text-slate-400 mt-1">"Discipline is the ultimate weapon." — Spaced Repetition System</p>
+            </div>
+            <div class="flex gap-3 mt-4 sm:mt-0">
+                <button onclick="exportData()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer border border-slate-700">📥 Export Backup</button>
+                <label class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer border border-slate-700">
+                    📤 Import Backup <input type="file" id="importFile" onchange="importData(event)" class="hidden" accept=".json">
+                </label>
+            </div>
+        </header>
 
-<section class="stats">
-  <div class="stat"><strong id="totalCount">0</strong><span>Total Chapters</span></div>
-  <div class="stat"><strong id="dueCount">0</strong><span>Due Today</span></div>
-  <div class="stat"><strong id="doneCount">0</strong><span>Completed Today</span></div>
-</section>
+        <!-- Add Task Form -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8 shadow-xl">
+            <h2 class="text-lg font-semibold mb-4 text-emerald-400">Add New Topic / Chapter</h2>
+            <form id="taskForm" onsubmit="addTask(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Chapter / Topic Name</label>
+                    <input type="text" id="topicName" required placeholder="e.g., Trigonometry Ex 8.4 or Calculus" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Study Date</label>
+                    <input type="date" id="studyDate" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:border-emerald-500 transition">
+                </div>
+                <div class="sm:col-span-3 flex justify-end">
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold px-6 py-2.5 rounded-lg transition cursor-pointer shadow-lg shadow-emerald-500/10">Add to Tracker</button>
+                </div>
+            </form>
+        </div>
 
-<section class="panel">
-  <h2>＋ Add New Chapter</h2>
-
-  <form id="chapterForm">
-    <label>Subject</label>
-    <input id="subject" placeholder="e.g. Science" required>
-
-    <div class="grid">
-      <div>
-        <label>Chapter Number</label>
-        <input id="chapterNumber" type="number" min="1" placeholder="e.g. 1" required>
-      </div>
-      <div>
-        <label>Initial Confidence /10</label>
-        <select id="initialRating" required>
-          <option value="">Select rating</option>
-          <option value="0">0 / 10</option>
-          <option value="1">1 / 10</option>
-          <option value="2">2 / 10</option>
-          <option value="3">3 / 10</option>
-          <option value="4">4 / 10</option>
-          <option value="5">5 / 10</option>
-          <option value="6">6 / 10</option>
-          <option value="7">7 / 10</option>
-          <option value="8">8 / 10</option>
-          <option value="9">9 / 10</option>
-          <option value="10">10 / 10</option>
-        </select>
-      </div>
+        <!-- Task List Table -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-emerald-400">Active Spaced Repetition Schedule</h2>
+                <span id="taskCount" class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">0 Topics</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-950/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+                            <th class="p-4">Topic / Chapter</th>
+                            <th class="p-4">Studied On</th>
+                            <th class="p-4 text-center">Rev 1 (+1D)</th>
+                            <th class="p-4 text-center">Rev 2 (+3D)</th>
+                            <th class="p-4 text-center">Rev 3 (+7D)</th>
+                            <th class="p-4 text-center">Rev 4 (+21D)</th>
+                            <th class="p-4 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taskTableBody" class="divide-y divide-slate-800/60 text-sm">
+                        <!-- Dynamic rows will appear here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <label>Chapter Name</label>
-    <input id="chapterName" placeholder="e.g. Chemical Reactions" required>
-
-    <button class="primary" type="submit">ADD CHAPTER</button>
-  </form>
-</section>
-
-<section class="panel">
-  <h2>Your Chapters</h2>
-  <input id="search" placeholder="Search subject or chapter...">
-  <div id="chapterList"></div>
-</section>
-
-<section class="panel">
-  <h2>Today's Revision</h2>
-  <p class="subtitle" id="todayDate"></p>
-  <button class="primary" id="todayButton">SHOW TODAY'S STUDY</button>
-
-  <div id="todaySection">
-    <div id="todayList"></div>
-  </div>
-</section>
-
-<section class="panel">
-  <h2>Data Backup</h2>
-  <div class="grid">
-    <button class="secondary" id="exportButton">EXPORT DATA</button>
-    <button class="secondary" id="importButton">IMPORT DATA</button>
-  </div>
-  <input id="importFile" type="file" accept=".json" hidden>
-  <button class="danger primary" id="resetButton">RESET ALL DATA</button>
-</section>
-
-</main>
-
-<footer>STUDY FLOW · Your progress stays in this browser</footer>
-</div>
-<div id="toast"></div>
-
-<script>
-"use strict";
-
-/* ===== STORAGE & DATA ===== */
-
-const STORAGE_KEY = "study_flow_single_v1";
-
-const intervals = [
-  1, 1, 1, 2, 4, 6, 9, 13, 18, 22, 25
-];
-
-let chapters = [];
-
-function loadData() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    chapters = saved ? JSON.parse(saved) : [];
-    if (!Array.isArray(chapters)) chapters = [];
-  } catch (error) {
-    chapters = [];
-    notify("Saved data could not be read.");
-  }
-}
-
-function saveData() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(chapters));
-    return true;
-  } catch (error) {
-    notify("Could not save data. Check browser storage.");
-    return false;
-  }
-}
-
-/* ===== DATE HELPERS ===== */
-
-function localDate(date = new Date()) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
-function addDays(dateString, days) {
-  const date = new Date(dateString + "T12:00:00");
-  date.setDate(date.getDate() + days);
-  return localDate(date);
-}
-
-function displayDate(dateString) {
-  if (!dateString) return "Not scheduled";
-  const date = new Date(dateString + "T12:00:00");
-  return date.toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric"
-  });
-}
-
-function getInterval(rating) {
-  return intervals[Math.max(0, Math.min(10, Number(rating)))];
-}
-
-/* ===== CHAPTER MANAGEMENT ===== */
-
-function addChapter(event) {
-  event.preventDefault();
-
-  const subject = document.getElementById("subject").value.trim();
-  const number = Number(document.getElementById("chapterNumber").value);
-  const name = document.getElementById("chapterName").value.trim();
-  const rating = Number(document.getElementById("initialRating").value);
-
-  if (!subject || !name || !number || number < 1) {
-    notify("Please enter valid chapter details.");
-    return;
-  }
-
-  const duplicate = chapters.some(c =>
-    c.subject.toLowerCase() === subject.toLowerCase() &&
-    c.number === number
-  );
-
-  if (duplicate) {
-    notify("This chapter number already exists in this subject.");
-    return;
-  }
-
-  const today = localDate();
-
-  chapters.push({
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2),
-    subject,
-    number,
-    name,
-    rating,
-    addedAt: today,
-    lastStudied: today,
-    nextDate: addDays(today, getInterval(rating)),
-    revisionCount: 0,
-    completedToday: false
-  });
-
-  saveData();
-  document.getElementById("chapterForm").reset();
-  renderAll();
-  notify("Chapter added successfully.");
-}
-
-/* ===== NOTIFICATIONS ===== */
-
-function notify(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  clearTimeout(notify.timer);
-  notify.timer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2500);
-}
-
-/* ===== STATUS HELPERS ===== */
-
-function isDue(chapter) {
-  return chapter.nextDate <= localDate();
-}
-
-function getTodayDone() {
-  return chapters.filter(c =>
-    c.completedToday &&
-    c.lastStudied === localDate()
-  );
-}
-</script>
-<script>
-/* ===== CHAPTER LIST ===== */
-
-function renderChapters() {
-  const list = document.getElementById("chapterList");
-  const query = document.getElementById("search").value.toLowerCase();
-
-  const filtered = chapters
-    .filter(c =>
-      c.subject.toLowerCase().includes(query) ||
-      c.name.toLowerCase().includes(query) ||
-      String(c.number).includes(query)
-    )
-    .sort((a, b) =>
-      a.subject.localeCompare(b.subject) || a.number - b.number
-    );
-
-  if (!filtered.length) {
-    list.innerHTML = '<div class="empty">No chapters found. Add your first chapter above.</div>';
-    return;
-  }
-
-  list.innerHTML = filtered.map(c => `
-    <article class="chapter">
-      <div class="chapter-top">
-        <div>
-          <h3>${escapeHTML(c.subject)} · Chapter ${c.number}</h3>
-          <div>${escapeHTML(c.name)}</div>
-          <div class="meta">
-            Confidence: ${c.rating}/10<br>
-            Revisions: ${c.revisionCount}<br>
-            Next revision: ${displayDate(c.nextDate)}
-          </div>
-        </div>
-        <span class="tag">${isDue(c) ? "DUE" : "UPCOMING"}</span>
-      </div>
-      <div class="chapter-actions">
-        <button class="secondary" onclick="deleteChapter('${c.id}')">Delete</button>
-      </div>
-    </article>
-  `).join("");
-}
-
-/* ===== TODAY'S STUDY ===== */
-
-function showToday() {
-  const section = document.getElementById("todaySection");
-  const list = document.getElementById("todayList");
-
-  section.style.display = "block";
-
-  const due = chapters.filter(isDue).sort((a, b) =>
-    a.subject.localeCompare(b.subject) || a.number - b.number
-  );
-
-  if (!due.length) {
-    list.innerHTML = `
-      <div class="empty">
-        <h3>All clear!</h3>
-        No chapters are due for revision today.
-      </div>`;
-    renderStats();
-    return;
-  }
-
-  list.innerHTML = due.map(c => `
-    <article class="chapter">
-      <div class="chapter-top">
-        <div>
-          <h3>${escapeHTML(c.subject)} · Chapter ${c.number}</h3>
-          <div>${escapeHTML(c.name)}</div>
-          <div class="meta">
-            Current confidence: ${c.rating}/10<br>
-            Due date: ${displayDate(c.nextDate)}
-          </div>
-        </div>
-        <span class="tag">REVISION DUE</span>
-      </div>
-
-      <label>New confidence rating after revision</label>
-      <select class="rating-select" id="rating-${c.id}">
-        ${Array.from({length:11}, (_,i) =>
-          `<option value="${i}" ${i === Number(c.rating) ? "selected" : ""}>${i} / 10</option>`
-        ).join("")}
-      </select>
-
-      <button class="primary" onclick="completeRevision('${c.id}')">
-        MARK REVISION COMPLETE
-      </button>
-    </article>
-  `).join("");
-}
-
-/* ===== COMPLETE REVISION ===== */
-
-function completeRevision(id) {
-  const chapter = chapters.find(c => c.id === id);
-  if (!chapter) return;
-
-  const select = document.getElementById("rating-" + id);
-  if (!select) return;
-
-  const newRating = Number(select.value);
-
-  if (!Number.isInteger(newRating) || newRating < 0 || newRating > 10) {
-    notify("Choose a rating from 0 to 10.");
-    return;
-  }
-
-  const today = localDate();
-  const gap = getInterval(newRating);
-
-  chapter.rating = newRating;
-  chapter.lastStudied = today;
-  chapter.nextDate = addDays(today, gap);
-  chapter.revisionCount = (chapter.revisionCount || 0) + 1;
-  chapter.completedToday = true;
-
-  saveData();
-  renderAll();
-  showToday();
-
-  notify(`Revision complete! Next revision in ${gap} days.`);
-}
-
-/* ===== DELETE CHAPTER ===== */
-
-function deleteChapter(id) {
-  const chapter = chapters.find(c => c.id === id);
-  if (!chapter) return;
-
-  if (!confirm(`Delete Chapter ${chapter.number}: ${chapter.name}?`)) {
-    return;
-  }
-
-  chapters = chapters.filter(c => c.id !== id);
-  saveData();
-  renderAll();
-  showToday();
-  notify("Chapter deleted.");
-}
-
-/* ===== DASHBOARD STATS ===== */
-
-function renderStats() {
-  const today = localDate();
-  const due = chapters.filter(c => c.nextDate <= today).length;
-  const done = getTodayDone().length;
-
-  document.getElementById("totalCount").textContent = chapters.length;
-  document.getElementById("dueCount").textContent = due;
-  document.getElementById("doneCount").textContent = done;
-
-  document.getElementById("todayDate").textContent =
-    new Date().toLocaleDateString("en-IN", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    });
-}
-
-/* ===== SAFE HTML TEXT ===== */
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[char]);
-}
-
-/* ===== BACKUP EXPORT ===== */
-
-function exportData() {
-  const backup = {
-    app: "STUDY FLOW",
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    chapters
-  };
-
-  const blob = new Blob(
-    [JSON.stringify(backup, null, 2)],
-    {type: "application/json"}
-  );
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = "study-flow-backup.json";
-  link.click();
-
-  URL.revokeObjectURL(url);
-  notify("Backup downloaded.");
-}
-
-/* ===== BACKUP IMPORT ===== */
-
-function importData(file) {
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = event => {
-    try {
-      const backup = JSON.parse(event.target.result);
-      const imported = backup.chapters;
-
-      if (!Array.isArray(imported)) {
-        throw new Error("Invalid backup");
-      }
-
-      const valid = imported.every(c =>
-        c.id && c.subject && c.name &&
-        Number.isFinite(Number(c.number)) &&
-        Number(c.rating) >= 0 &&
-        Number(c.rating) <= 10 &&
-        /^\d{4}-\d{2}-\d{2}$/.test(c.nextDate)
-      );
-
-      if (!valid) throw new Error("Invalid chapter data");
-
-      if (!confirm("Replace your current data with this backup?")) {
-        return;
-      }
-
-      chapters = imported;
-      saveData();
-      renderAll();
-      notify("Backup imported successfully.");
-    } catch (error) {
-      notify("Invalid backup file.");
-    }
-  };
-
-  reader.readAsText(file);
-}
-
-/* ===== RESET ===== */
-
-function resetData() {
-  if (!confirm("Delete ALL chapters and revision history?")) return;
-
-  if (!confirm("This cannot be undone. Continue?")) return;
-
-  chapters = [];
-  saveData();
-  renderAll();
-
-  document.getElementById("todaySection").style.display = "none";
-  notify("All data cleared.");
-}
-
-/* ===== MAIN RENDER ===== */
-
-function renderAll() {
-  renderChapters();
-  renderStats();
-}
-
-/* ===== EVENT LISTENERS ===== */
-
-document.getElementById("chapterForm")
-  .addEventListener("submit", addChapter);
-
-document.getElementById("search")
-  .addEventListener("input", renderChapters);
-
-document.getElementById("todayButton")
-  .addEventListener("click", showToday);
-
-document.getElementById("exportButton")
-  .addEventListener("click", exportData);
-
-document.getElementById("importButton")
-  .addEventListener("click", () =>
-    document.getElementById("importFile").click()
-  );
-
-document.getElementById("importFile")
-  .addEventListener("change", event => {
-    importData(event.target.files[0]);
-    event.target.value = "";
-  });
-
-document.getElementById("resetButton")
-  .addEventListener("click", resetData);
-
-/* ===== START APPLICATION ===== */
-
-loadData();
-renderAll();
-
-</script>
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('ayanokoji_tasks')) || [];
+
+        // Set default date to today
+        document.getElementById('studyDate').valueAsDate = new Date();
+
+        function saveAndRender() {
+            localStorage.setItem('ayanokoji_tasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        function addTask(e) {
+            e.preventDefault();
+            const name = document.getElementById('topicName').value;
+            const date = document.getElementById('studyDate').value;
+
+            const newTask = {
+                id: Date.now(),
+                name: name,
+                date: date,
+                rev1: false,
+                rev2: false,
+                rev3: false,
+                rev4: false
+            };
+
+            tasks.push(newTask);
+            document.getElementById('topicName').value = '';
+            document.getElementById('studyDate').valueAsDate = new Date();
+            saveAndRender();
+        }
+
+        function toggleRev(id, revField) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task[revField] = !task[revField];
+                saveAndRender();
+            }
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveAndRender();
+        }
+
+        function renderTasks() {
+            const tbody = document.getElementById('taskTableBody');
+            document.getElementById('taskCount').innerText = `${tasks.length} Topics`;
+            
+            if (tasks.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">No topics tracked yet. Add your first study topic above.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = tasks.map(t => `
+                <tr class="hover:bg-slate-800/40 transition">
+                    <td class="p-4 font-medium text-slate-200">${t.name}</td>
+                    <td class="p-4 text-slate-400 text-xs">${t.date}</td>
+                    <td class="p-4 text-center"><input type="checkbox" ${t.rev1 ? 'checked' : ''} onclick="toggleRev(${t.id}, 'rev1')" class="w-4 h-4 accent-emerald-500 cursor-pointer"></td>
+                    <td class="p-4 text-center"><input type="checkbox" ${t.rev2 ? 'checked' : ''} onclick="toggleRev(${t.id}, 'rev2')" class="w-4 h-4 accent-emerald-500 cursor-pointer"></td>
+                    <td class="p-4 text-center"><input type="checkbox" ${t.rev3 ? 'checked' : ''} onclick="toggleRev(${t.id}, 'rev3')" class="w-4 h-4 accent-emerald-500 cursor-pointer"></td>
+                    <td class="p-4 text-center"><input type="checkbox" ${t.rev4 ? 'checked' : ''} onclick="toggleRev(${t.id}, 'rev4')" class="w-4 h-4 accent-emerald-500 cursor-pointer"></td>
+                    <td class="p-4 text-center">
+                        <button onclick="deleteTask(${t.id})" class="text-rose-400 hover:text-rose-300 text-xs font-semibold px-2 py-1 bg-rose-500/10 hover:bg-rose-500/20 rounded transition cursor-pointer">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "study_backup_" + new Date().toISOString().slice(0,10) + ".json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const fileReader = new FileReader();
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0], "UTF-8");
+                fileReader.onload = e => {
+                    try {
+                        tasks = JSON.parse(e.target.result);
+                        saveAndRender();
+                        alert("Backup imported successfully!");
+                    } catch (error) {
+                        alert("Invalid JSON file!");
+                    }
+                };
+            }
+        }
+
+        // Initial render
+        renderTasks();
+    </script>
 </body>
 </html>
